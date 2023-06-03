@@ -21,13 +21,43 @@ use crate::{
 };
 
 pub fn draw_overview<B: Backend>(f: &mut Frame<'_, B>, app: &mut App, area: Rect) {
+  let mut constraints: Vec<Constraint> = vec![];
   if app.show_info_bar {
-    let chunks = vertical_chunks(vec![Constraint::Length(9), Constraint::Min(10)], area);
-    draw_status_block(f, app, chunks[0]);
-    draw_resource_tabs_block(f, app, chunks[1]);
-  } else {
-    draw_resource_tabs_block(f, app, area);
+    constraints.push(Constraint::Length(9));
   }
+  if app.show_filter {
+    constraints.push(Constraint::Length(3));
+  }
+  constraints.push(Constraint::Min(10));
+
+  let chunks = vertical_chunks(constraints, area);
+  let mut chunks_index = 0;
+  if app.show_info_bar {
+    draw_status_block(f, app, chunks[chunks_index]);
+    chunks_index += 1;
+  }
+  if app.show_filter {
+    draw_filter(f, app, chunks[chunks_index]);
+    chunks_index += 1;
+  }
+  draw_resource_tabs_block(f, app, chunks[chunks_index]);
+}
+
+pub fn draw_filter<B: Backend>(f: &mut Frame<'_, B>, app: &mut App, area: Rect) {
+  let title = format!(
+    " Filter {} (toggle: {}) ",
+    DEFAULT_KEYBINDING.jump_to_filter.key, DEFAULT_KEYBINDING.toggle_filter.key
+  );
+  let mut block = layout_block_default(title.as_str());
+
+  if app.get_current_route().active_block == ActiveBlock::Filter {
+    block = block.style(style_secondary(app.light_theme));
+    f.set_cursor(area.x + 2 + app.data.filter.len() as u16, area.y + 1);
+  }
+
+  let paragraph = Paragraph::new(app.data.filter.as_str()).block(block);
+
+  f.render_widget(paragraph, area);
 }
 
 fn draw_status_block<B: Backend>(f: &mut Frame<'_, B>, app: &mut App, area: Rect) {

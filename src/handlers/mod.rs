@@ -169,10 +169,18 @@ async fn handle_route_events(key: Key, app: &mut App) {
         _ if key == DEFAULT_KEYBINDING.toggle_info.key => {
           app.show_info_bar = !app.show_info_bar;
         }
+        _ if key == DEFAULT_KEYBINDING.toggle_filter.key => {
+          app.show_filter = !app.show_filter;
+        }
         _ if key == DEFAULT_KEYBINDING.select_all_namespace.key => app.data.selected.ns = None,
         _ if key == DEFAULT_KEYBINDING.jump_to_namespace.key => {
           if app.get_current_route().active_block != ActiveBlock::Namespaces {
             app.push_navigation_stack(RouteId::Home, ActiveBlock::Namespaces);
+          }
+        }
+        _ if key == DEFAULT_KEYBINDING.jump_to_filter.key => {
+          if app.get_current_route().active_block != ActiveBlock::Filter {
+            app.push_navigation_stack(RouteId::Home, ActiveBlock::Filter);
           }
         }
         // as these are tabs with index the order here matters, atleast for readability
@@ -521,6 +529,7 @@ async fn handle_route_events(key: Key, app: &mut App) {
             .await;
           }
         }
+        ActiveBlock::Filter => { /*  */ }
         ActiveBlock::Contexts | ActiveBlock::Utilization | ActiveBlock::Help => { /* Do nothing */ }
       }
     }
@@ -596,6 +605,7 @@ async fn handle_block_scroll(app: &mut App, up: bool, is_mouse: bool, page: bool
       app.log_auto_scroll = false;
       app.data.logs.handle_scroll(inverse_dir(up, is_mouse), page);
     }
+    ActiveBlock::Filter => { /* doesn't scroll */ }
     ActiveBlock::Describe | ActiveBlock::Yaml => app
       .data
       .describe_out

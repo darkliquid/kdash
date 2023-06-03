@@ -28,6 +28,7 @@ generate_keybindings! {
   jump_to_current_context,
   jump_to_all_context,
   jump_to_utilization,
+  jump_to_filter,
   copy_to_clipboard,
   pg_up,
   pg_down,
@@ -36,6 +37,7 @@ generate_keybindings! {
   left,
   right,
   toggle_info,
+  toggle_filter,
   log_auto_scroll,
   select_all_namespace,
   jump_to_namespace,
@@ -131,6 +133,12 @@ pub const DEFAULT_KEYBINDING: KeyBindings = KeyBindings {
     desc: "Switch to resource utilization view",
     context: HContext::General,
   },
+  jump_to_filter: KeyBinding {
+    key: Key::Char('/'),
+    alt: None,
+    desc: "Switch to filter entry",
+    context: HContext::General,
+  },
   cycle_main_views: KeyBinding {
     key: Key::Tab,
     alt: None,
@@ -183,6 +191,12 @@ pub const DEFAULT_KEYBINDING: KeyBindings = KeyBindings {
     key: Key::Char('i'),
     alt: None,
     desc: "Show/Hide info bar",
+    context: HContext::Overview,
+  },
+  toggle_filter: KeyBinding {
+    key: Key::Char('f'),
+    alt: None,
+    desc: "Show/Hide filter bar",
     context: HContext::Overview,
   },
   log_auto_scroll: KeyBinding {

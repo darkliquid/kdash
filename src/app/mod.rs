@@ -79,6 +79,7 @@ pub enum ActiveBlock {
   ClusterRoles,
   ClusterRoleBinding,
   More,
+  Filter,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -137,6 +138,7 @@ pub struct Data {
   pub role_bindings: StatefulTable<KubeRoleBinding>,
   pub cluster_roles: StatefulTable<KubeClusterRole>,
   pub cluster_role_binding: StatefulTable<KubeClusterRoleBinding>,
+  pub filter: String,
 }
 
 /// selected data items
@@ -159,6 +161,7 @@ pub struct App {
   pub context_tabs: TabsState,
   pub more_resources_menu: StatefulList<(String, ActiveBlock)>,
   pub show_info_bar: bool,
+  pub show_filter: bool,
   pub is_loading: bool,
   pub is_streaming: bool,
   pub is_routing: bool,
@@ -214,6 +217,7 @@ impl Default for Data {
       role_bindings: StatefulTable::new(),
       cluster_roles: StatefulTable::new(),
       cluster_role_binding: StatefulTable::new(),
+      filter: String::default(),
     }
   }
 }
@@ -350,6 +354,7 @@ impl Default for App {
         // ("Network Policies".into(), ActiveBlock::RplCtrl),
       ]),
       show_info_bar: true,
+      show_filter: true,
       is_loading: false,
       is_streaming: false,
       is_routing: false,
